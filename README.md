@@ -24,6 +24,8 @@ From this plugin's own eval run: *"Claude writes most of our code now, and requi
 
 Both answers are sensible. Only the second is how Anthropic's Claude Code team ships, and they report the result: merged pull requests more than doubled from June to September while the share reverted fell by over 40%.
 
+[Read both answers in full](docs/examples/merge-approval-tiers.md), or see [more examples](#example-answers-with-and-without).
+
 ## Old habits, new patterns
 
 | The habit | What Anthropic's teams do now |
@@ -50,6 +52,50 @@ flowchart LR
 
 Each topic file distills every claude.dev post that touches it, from the first post (April 2026) on. Every quote is checked word for word against the original.
 
+Claude answers from the markdown in this repo, so it doesn't need to reach claude.dev. With web access on, it fetched nothing for ordinary questions (0 of 4 runs) and checked claude.dev only when asked for the latest guidance (2 of 2).
+
+## When it kicks in
+
+You don't have to call it. Claude loads the skill when a question is about how your team should work, and stays out when you just want code. Three runs each, with only this plugin installed:
+
+| You type | Kicks in? |
+|---|---|
+| "Hey, I need to set up test cases for our new LLM feature that drafts support replies." | Yes, 3 of 3 |
+| "Hey, I need to set up test cases." | No, 0 of 3. Say what you're testing. |
+| "Write unit tests for a function that parses dates like 2026-11-02." | No, 0 of 3. That's plain coding. |
+
+If it doesn't kick in, add what you're testing and for whom, or call it directly with `/let-it-cook:playbook`.
+
+## Example answers, with and without
+
+On its own, Claude already gives good general advice. With the plugin, it gives the specific practice Anthropic's teams landed on, and sometimes a different recommendation. These excerpts come from the eval run.
+
+**"We want CI to block changes that make our web app slower, but timing-based tests are too flaky to gate on. What should we do?"**
+
+| Without the plugin | With let-it-cook |
+|---|---|
+| "Gate on **deterministic proxies** for speed, and keep wall-clock timing only as a signal you report, not one you block on." | "Gate CI on deterministic counts, not milliseconds, and only on counts you've shown move with real user latency." |
+
+Both reach for deterministic numbers. Only the second has you prove each one tracks what users feel, then ratchet the limit with every win. [Full answers](docs/examples/perf-ci-gate.md)
+
+**"We're shipping an LLM feature that drafts replies to support tickets. How do we build tests that tell us whether a prompt change or a model upgrade made it better or worse?"**
+
+| Without the plugin | With let-it-cook |
+|---|---|
+| "You need an **offline eval harness**: a fixed set of real tickets, a way to score each draft, and a comparison between the current version (baseline) and the proposed one (candidate)." | "The short version: build a fixed set of real tickets that experts agree on, grade drafts with code checks where you can and a rubric-based LLM judge where you can't, measure how much scores move by chance, and only count a change as better or worse if it moves the score by more than that." |
+
+Both start from real tickets. Only the plugin's answers held each case to a "two experts would agree" bar, in all three runs, and they met the golden criteria 3 of 3 times against 1 of 3. [Full answers](docs/examples/llm-feature-eval.md)
+
+**"Our coding agent and our AI code reviewer keep ping-ponging: one pull request went through 30 review rounds overnight. How do we stop that without dropping AI review?"**
+
+| Without the plugin | With let-it-cook |
+|---|---|
+| "Allow at most 2–3 automated fix/review cycles per PR." | "They ran git blame on what the reviewer kept flagging. About **59% was code that had been there since the reviewer's first pass**." |
+
+Both cap the rounds and re-review only the new diff. The second adds what Anthropic found when it looked, and the fix that follows: flag the whole class of bug so every instance gets fixed in one pass. [Full answers](docs/examples/review-loop-rounds.md)
+
+[All seven questions, with both answers in full](docs/examples/)
+
 ## Install
 
 ```
@@ -64,8 +110,6 @@ Then ask in plain words, with questions like the ones it's tested on:
 - "Our AI reviewer and our coding agent keep ping-ponging. How do we stop it?"
 - "I'm handing Claude a big migration for a few hours. How do I write the task?"
 - "What should a scheduled agent that posts to Slack design for?"
-
-It stays out of ordinary coding requests. To call it directly, use `/let-it-cook:playbook`.
 
 ## Does it actually help?
 
