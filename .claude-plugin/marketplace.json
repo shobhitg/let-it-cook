@@ -1,0 +1,12 @@
+{
+  "name": "let-it-cook",
+  "description": "Anthropic's published engineering practices from claude.dev, packaged as a Claude Code skill.",
+  "owner": { "name": "Shobhit Gupta" },
+  "plugins": [
+    {
+      "name": "let-it-cook",
+      "source": "./",
+      "description": "How to ship, verify, hand work to agents, automate and measure, from Anthropic's claude.dev posts."
+    }
+  ]
+}

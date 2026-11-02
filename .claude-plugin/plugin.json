@@ -1,0 +1,9 @@
+{
+  "name": "let-it-cook",
+  "version": "0.1.0",
+  "description": "Anthropic's own engineering practices from the claude.dev blog, as a skill: how to ship, verify, hand work to agents, run them unattended, and measure the result.",
+  "author": { "name": "Shobhit Gupta" },
+  "homepage": "https://claude.dev/blog/",
+  "repository": "https://github.com/shobhitg/let-it-cook",
+  "keywords": ["engineering-practices", "code-review", "evals", "agents", "claude-dev"]
+}
